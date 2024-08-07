@@ -79,6 +79,7 @@ public class Parser {
     private int pre(Token op) {
         /* TODO: Su codigo aqui */
 
+
         /* El codigo de esta seccion se explicara en clase */
 
         switch(op.getId()) {
@@ -132,10 +133,95 @@ public class Parser {
     private boolean S() {
         return E() && term(Token.SEMI);
     }
-
+    
+    /* TODO: sus otras funciones aqui */
+ 
     private boolean E() {
+        int save = this.next;
+        
+        this.next = save;
+        if ( E1() ) { return true;}
+
+        this.next = save;
+        if ( E2() ) { return true;}
+
+        this.next = save;
+        if ( E3() ) { return true;}
+
+        return false;
+    }
+    
+    private boolean E1() {
+        // T + E
+        return T() && term(Token.PLUS) && E();
+    }
+
+    private boolean E2() {
+        // T - E
+        return T() && term(Token.MINUS) && E();
+    }
+
+    private boolean E3() {
+        // T 
+        return T();
+    }
+
+    private boolean T() {
+        int save = this.next;
+        
+        this.next = save;
+        if ( T1() ) { return true;}
+
+        this.next = save;
+        if ( T2() ) { return true;}
+
+        this.next = save;
+        if ( T3() ) { return true;}
+
+        this.next = save;
+        if ( T4() ) { return true;}
+
+        this.next = save;
+        if ( T5() ) { return true;}
+
+        this.next = save;
+        if ( T6() ) { return true;}
+
         return false;
     }
 
-    /* TODO: sus otras funciones aqui */
+    private boolean T1() {
+        // N * T
+        return N() && term(Token.MULT) && T();
+    }
+
+    private boolean T2() {
+        // N / T
+        return N() && term(Token.DIV) && T();
+    }
+
+    private boolean T3() {
+        // N % T
+        return N() && term(Token.MOD) && T();
+    }
+    
+    private boolean T4() {
+        // ~S
+        return term(Token.UNARY) && S();
+    }
+
+    private boolean T5() {
+        // (S)
+        return term(Token.LPAREN) && S() && term(Token.RPAREN);
+    }
+
+    private boolean T6() {
+        // N * T
+        return N();
+    }
+
+    private boolean N() {
+        // T +  
+        return term(Token.NUMBER);
+    }
 }
